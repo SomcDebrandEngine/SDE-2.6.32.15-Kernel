@@ -1,0 +1,4 @@
+ARCH=arm CROSS_COMPILE=/home/achotjan/SemcDebrandEngine/prebuilts/linaro/toolchain/bin/arm-linux-androideabi- make sde_es209ra_defconfig
+ARCH=arm CROSS_COMPILE=/home/achotjan/SemcDebrandEngine/prebuilts/linaro/toolchain/bin/arm-linux-androideabi- make -j4
+
+
