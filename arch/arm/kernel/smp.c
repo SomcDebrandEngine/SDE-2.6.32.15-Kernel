@@ -66,6 +66,8 @@ int __cpuinit __cpu_up(unsigned int cpu)
 {
 	struct cpuinfo_arm *ci = &per_cpu(cpu_data, cpu);
 	struct task_struct *idle = ci->idle;
+	pgd_t *pgd;
+	pmd_t *pmd;
 	int ret;
 
 	/*

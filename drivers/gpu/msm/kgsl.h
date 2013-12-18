@@ -21,7 +21,6 @@
 #include <linux/mutex.h>
 #include <linux/cdev.h>
 #include <linux/regulator/consumer.h>
-#include <linux/mm.h>
 #include <linux/ion.h>
 
 #define KGSL_NAME "kgsl"
@@ -104,15 +103,7 @@ struct kgsl_driver {
 extern struct kgsl_driver kgsl_driver;
 
 struct kgsl_pagetable;
-struct kgsl_memdesc;
-
-struct kgsl_memdesc_ops {
-	int (*vmflags)(struct kgsl_memdesc *);
-	int (*vmfault)(struct kgsl_memdesc *, struct vm_area_struct *,
-		       struct vm_fault *);
-	void (*free)(struct kgsl_memdesc *memdesc);
-	int (*map_kernel_mem)(struct kgsl_memdesc *);
-};
+struct kgsl_memdesc_ops;
 
 /* shared memory allocation */
 struct kgsl_memdesc {
@@ -142,7 +133,7 @@ struct kgsl_mem_entry {
 	struct kgsl_memdesc memdesc;
 	int memtype;
 	void *priv_data;
-	struct rb_node node;
+	struct list_head list;
 	uint32_t free_timestamp;
 	/* back pointer to private structure under whose context this
 	* allocation is made */
@@ -196,15 +187,13 @@ static inline int kgsl_gpuaddr_in_memdesc(const struct kgsl_memdesc *memdesc,
 	}
 	return 0;
 }
-static inline uint8_t *kgsl_gpuaddr_to_vaddr(struct kgsl_memdesc *memdesc,
+static inline uint8_t *kgsl_gpuaddr_to_vaddr(const struct kgsl_memdesc *memdesc,
 					     unsigned int gpuaddr)
 {
-	if (memdesc->gpuaddr == 0 ||
-		gpuaddr < memdesc->gpuaddr ||
-		gpuaddr >= (memdesc->gpuaddr + memdesc->size) ||
-		(NULL == memdesc->hostptr && memdesc->ops->map_kernel_mem &&
-			memdesc->ops->map_kernel_mem(memdesc)))
-			return NULL;
+	if (memdesc->hostptr == NULL || memdesc->gpuaddr == 0 ||
+		(gpuaddr < memdesc->gpuaddr ||
+		gpuaddr >= memdesc->gpuaddr + memdesc->size))
+		return NULL;
 
 	return memdesc->hostptr + (gpuaddr - memdesc->gpuaddr);
 }

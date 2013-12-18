@@ -1148,10 +1148,11 @@ static int es209ra_reset_keys_up[] = {
 static struct keyreset_platform_data es209ra_reset_keys_pdata = {
   .keys_up = es209ra_reset_keys_up,
   .keys_down = {
-    KEY_POWER,
+    KEY_VOLUMEUP,
     KEY_HOME,
     0
   },
+  .down_time_ms = 3000,
 };
 
 struct platform_device es209ra_reset_keys_device = {
@@ -2099,6 +2100,7 @@ static void __init es209ra_init(void)
 	msm_mddi_tmd_fwvga_display_device_init();
 }
 
+#ifndef CONFIG_CAPTURE_KERNEL
 static void __init es209ra_allocate_memory_regions(void)
 {
 	void *addr;
@@ -2169,12 +2171,15 @@ static void __init es209ra_fixup(struct machine_desc *desc, struct tag *tags,
 	mi->bank[1].size = (127*1024*1024);
 	mi->bank[1].node = PHYS_TO_NID(mi->bank[1].start);
 }
+#endif
 
 static void __init es209ra_map_io(void)
 {
 	msm_shared_ram_phys = MSM_SHARED_RAM_PHYS;
 	msm_map_qsd8x50_io();
+#ifndef CONFIG_CAPTURE_KERNEL
 	es209ra_allocate_memory_regions();
+#endif
 	msm_clock_init(msm_clocks_8x50, msm_num_clocks_8x50);
 }
 

@@ -1,7 +1,7 @@
 VERSION = 2
 PATCHLEVEL = 6
-SUBLEVEL = 31
-EXTRAVERSION = .1
+SUBLEVEL = 32
+EXTRAVERSION = .2
 NAME = Somc Debrand Engine
 MAKEFLAGS += -rR --no-print-directory
 
@@ -181,8 +181,8 @@ MODFLAGS	= -DMODULE
 CFLAGS_MODULE   = $(MODFLAGS) -fno-pic
 AFLAGS_MODULE   = $(MODFLAGS)
 LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
-AFLAGS_KERNEL	=
+CFLAGS_KERNEL	= -ftree-vectorize -ffast-math -fsingle-precision-constant
+AFLAGS_KERNEL	= -ftree-vectorize -ffast-math -fsingle-precision-constant
 
 LINUXINCLUDE    := -Iinclude \
                    $(if $(KBUILD_SRC),-Iinclude2 -I$(srctree)/include) \

@@ -50,11 +50,11 @@
 #include <linux/notifier.h>
 #include <linux/inetdevice.h>
 #include <linux/igmp.h>
+#include <linux/iface_stat.h>
 #ifdef CONFIG_SYSCTL
 #include <linux/sysctl.h>
 #endif
 #include <linux/kmod.h>
-
 #include <net/arp.h>
 #include <net/ip.h>
 #include <net/tcp.h>
@@ -372,6 +372,8 @@ static int __inet_insert_ifa(struct in_ifaddr *ifa, struct nlmsghdr *nlh,
 	   listeners of netlink will know about new ifaddr */
 	rtmsg_ifa(RTM_NEWADDR, ifa, nlh, pid);
 	blocking_notifier_call_chain(&inetaddr_chain, NETDEV_UP, ifa);
+
+	create_iface_stat(in_dev);
 
 	return 0;
 }

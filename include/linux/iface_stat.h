@@ -15,7 +15,6 @@
 
 #ifndef __IFACE_STAT_H
 #define __IFACE_STAT_H
-#include <linux/inetdevice.h>
 
 /*
  * Contains definitions for persistent data usage tracking per

@@ -1,4 +1,0 @@
-echo '### Compiling modules... ###'
-cd /home/achotjan/vendor/atheros/wlan/host
-ARCH=arm CROSS_COMPILE=/home/achotjan/SemcDebrandEngine/prebuilts/linaro/toolchain/bin/arm-linux-androideabi- KERNEL_DIR=/home/achotjan/hwa/kernel/semc/qsd8k_32 make clobber
-ARCH=arm CROSS_COMPILE=/home/achotjan/SemcDebrandEngine/prebuilts/linaro/toolchain/bin/arm-linux-androideabi- KERNEL_DIR=/home/achotjan/hwa/kernel/semc/qsd8k_32 make
